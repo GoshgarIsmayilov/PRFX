@@ -111,7 +111,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $x_i \in X$ is the secret value of the party $i$. The privacy-preserving prefix summation problem defines a secure multi-party computation function $prf: (\mathbb{Z}^*, i) \to \mathbb{Z}$ which takes the ordered set of secret values and the order of the party calling the function in order to return the corresponding sum of prefixes:
 
 $$
@@ -120,7 +119,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $\oplus$ is a binary associative summation operator.
 
 ## Privacy-Preserving Prefix Summation Protocol
@@ -135,7 +133,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $c_p$ and $c_b$ are the resulting commitments of the commitment function $Comm$, based on the secret value $x$, the prefix $p$, the buffer $b$ and their corresponding random values $r_{p}$ and $r_{b}$. Then, the parties can find their peers in the hypercube network:
 
 $$
@@ -144,7 +141,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $u^{{peer}}$ is the pair of the party $u$ in the hypercube network at the stage $t \in [0, log(N)-1]$. The buffers of the parties are encrypted with the public keys of their peer parties and submitted to the contract:
 
 $$
@@ -153,7 +149,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $E$ is the resulting encryptions of the encryption function $Enc$ based on the cumulative buffers $b, b^{{peer}}$, the salting value $r$ and the public key $pk^{{peer}}$. The encryptions are later fetched from the smart contract and decrypted:
 
 $$
@@ -162,7 +157,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $D$ is the resulting decryptions of the decryption function $Dec$ based on the secret key $sk$. The parties perform the prefix summation operations and generate their corresponding zero-knowledge proofs about their correctness:
 
 $$
@@ -174,7 +168,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $\pi$ is the resulting proof of the zero-knowledge proof generation function $ZkpGen$ with respect to the buffers $b, b^{{peer}}$, the prefix $p$, their salting values $r_p, r_b, r^{{peer}}_b, r^{{new}}_p, r^{{new}}_b$ and their commitments $c_p, c_b, c^{{peer}}_b, c^{{new}}_p, c^{{new}}_b$. The parties submit the resulting proofs to the smart contract in order to verify:
 
 $$
@@ -183,7 +176,6 @@ b = ZkpVfy([& \pi, c_p, c_b, c^{{peer}}_b, c^{{new}}_p, c^{{new}}_b])
 \end{align}
 $$
 
-\noindent
 where $b$ is Boolean output of the proof verification function $ZkpVfy$ to represent proof correctness. Once the proof is successfully verified, the old prefix and buffer commitments of the parties are replaced with new commitments. After the repetition of the third and the fourth phases in the hypercube networks, the parties eventually obtain their own prefix summations.
 
 <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/hypercube.png" width="70%"/> 
@@ -198,7 +190,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $u \subset G(v)$ is the sub-graph whose root is the node $v$ and $\mathcal{S}(v)$ is the total stake of the node $v$ in the pool. The resolution of the resulting graph requires a linearization algorithm to traverse it. In this work, we use the depth-first traversal-based Euler Tour Technique, which splits each edge into two directed edges as downward (i.e. advance) and upward (i.e. retreat) edges. It basically transforms the traversal of the given graph into the traversal of the singly-linked list. We set the weights of the advance edges from node $u$ to $v$ as the commitments of the amounts of tokens staked, $w(e_{uv}) = c_{uv}$ and; the weights of the retreat edges simply as zero, $w(e_{vu}) = 0$.
 
 <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos1.png" width="50%"/> <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos2.png" width="30%"/> 
@@ -211,7 +202,6 @@ $$
 \end{align}
 $$
 
-\noindent
 where $min(\mathcal{P})$ and $max(\mathcal{P})$ represent the minimum and maximum prefix values of the node $v$. For $V$ number of nodes in the system, the time complexity needs $O(V)$ for staking at most, $O(V+E)$ for the depth-first search-based graph traversal, $O(VlogV)$ for prefix summation and verification and $O(V)$ for stake computation, which eventually results in $O(VlogV)$ global complexity at the worst case scenario.
 
 <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos3.png" width="50%"/> <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos4.png" width="40%"/> 
