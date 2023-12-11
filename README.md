@@ -27,7 +27,7 @@ Steps to make a private transaction:
 | Deploy Contract  | 2,099,791        | 0.00554550       | 11.50           |
 | Register         | 251,692          | 0.00041469       | 0.86            |
 | Submit Summation | 393,707          | 0.00063854       | 1.32            |
-| Verify Summation | 1,486,103        | 0.00236184       | 4,90            |
+| Verify Summation | 1,486,103        | 0.00236184       | 4.90            |
 
 The transaction hashes can be traced on ```https://sepolia.etherscan.io```:
 
