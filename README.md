@@ -103,13 +103,122 @@ The zero-knowledge proofs are verified on-chain, without requiring any time cost
 
 ## Problem Definition
 
+The privacy-preserving prefix summation on blockchain is a problem where a set of individual parties with certain secret values is interested in the sums of the prefixes of these values without disclosing them. Suppose that there exist an ordered set of $N$ secret values from $N$ different parties:
+
+$$
+\begin{align}
+& X = [x_0, x_1, ..., x_{N-1}]
+\end{align}
+$$
+
+\noindent
+where $x_i \in X$ is the secret value of the party $i$. The privacy-preserving prefix summation problem defines a secure multi-party computation function $prf: (\mathbb{Z}^*, i) \to \mathbb{Z}$ which takes the ordered set of secret values and the order of the party calling the function in order to return the corresponding sum of prefixes:
+
+$$
+\begin{align}
+& prf(X, i) = x_0 \oplus x_1 \oplus ... \oplus x_{i-1}
+\end{align}
+$$
+
+\noindent
+where $\oplus$ is a binary associative summation operator.
+
 ## Privacy-Preserving Prefix Summation Protocol
+
+Once the contract is successfully deployed, the parties register with the commitments of their secret values:
+
+$$
+\begin{align}
+& c_p = Comm(p = x, r_{p}) \\
+& c_b = Comm(b = p, r_{b}) \\
+& pk, sk = KeyGen(k) 
+\end{align}
+$$
+
+\noindent
+where $c_p$ and $c_b$ are the resulting commitments of the commitment function $Comm$, based on the secret value $x$, the prefix $p$, the buffer $b$ and their corresponding random values $r_{p}$ and $r_{b}$. Then, the parties can find their peers in the hypercube network:
+
+$$
+\begin{align}
+& u \oplus 2^t = u^{{peer}^A} 
+\end{align}
+$$
+
+\noindent
+where $u^{{peer}}$ is the pair of the party $u$ in the hypercube network at the stage $t \in [0, log(N)-1]$. The buffers of the parties are encrypted with the public keys of their peer parties and submitted to the contract:
+
+$$
+\begin{align}
+& E = Enc([b = b + b^{{peer}}], r, pk^{{peer}}) 
+\end{align}
+$$
+
+\noindent
+where $E$ is the resulting encryptions of the encryption function $Enc$ based on the cumulative buffers $b, b^{{peer}}$, the salting value $r$ and the public key $pk^{{peer}}$. The encryptions are later fetched from the smart contract and decrypted:
+
+$$
+\begin{align}
+& [m^{{peer}}, r^{{peer}}] = D = Dec([E], sk)
+\end{align}
+$$
+
+\noindent
+where $D$ is the resulting decryptions of the decryption function $Dec$ based on the secret key $sk$. The parties perform the prefix summation operations and generate their corresponding zero-knowledge proofs about their correctness:
+
+$$
+\begin{align}
+\pi = ZkpGen([& b = b + b^{{peer}}, \nonumber \\
+& p = p + b^{{peer}} \vee p = p], \nonumber \\
+& [r_p, r_b, r^{{peer}}_b, r^{{new}}_p, r^{{new}}_b], \nonumber \\
+& [c_p, c_b, c^{{peer}}_b, c^{{new}}_p, c^{{new}}_b]) 
+\end{align}
+$$
+
+\noindent
+where $\pi$ is the resulting proof of the zero-knowledge proof generation function $ZkpGen$ with respect to the buffers $b, b^{{peer}}$, the prefix $p$, their salting values $r_p, r_b, r^{{peer}}_b, r^{{new}}_p, r^{{new}}_b$ and their commitments $c_p, c_b, c^{{peer}}_b, c^{{new}}_p, c^{{new}}_b$. The parties submit the resulting proofs to the smart contract in order to verify:
+
+$$
+\begin{align}
+b = ZkpVfy([& \pi, c_p, c_b, c^{{peer}}_b, c^{{new}}_p, c^{{new}}_b])
+\end{align}
+$$
+
+\noindent
+where $b$ is Boolean output of the proof verification function $ZkpVfy$ to represent proof correctness. Once the proof is successfully verified, the old prefix and buffer commitments of the parties are replaced with new commitments. After the repetition of the third and the fourth phases in the hypercube networks, the parties eventually obtain their own prefix summations.
+
+<img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/hypercube.png" width="70%"/> 
+
+## Delegated Proof-of-Stake with Euler Tour Technique (_pp-dPoS_)
+
+We theoretically show the application of the proposed protocol on the privacy-preserving variant of the existing delegated proof-of-stake (i.e. _pp-dPoS_) voting mechanism where the nodes in the network transfer their validation rights into the delegate nodes by staking hidden amount of tokens into their pools. It can be formulated as the directed graph $G=(V,E)$ where $V$ is the set of public blockchain nodes while $E$ is the set of private stakes between these nodes in the network where their weights $w(e_{uv})$ are equal to the commitments of the amount of tokens staked. The goal of the problem is to find the total amount of tokens staked in the pool for every node with the following recursive formulation:
+
+$$
+\begin{align}
+& \mathcal{S}(v) = w(e_{vu}) + \sum_{u \subset G(v)} \mathcal{S}(u) 
+\end{align}
+$$
+
+\noindent
+where $u \subset G(v)$ is the sub-graph whose root is the node $v$ and $\mathcal{S}(v)$ is the total stake of the node $v$ in the pool. The resolution of the resulting graph requires a linearization algorithm to traverse it. In this work, we use the depth-first traversal-based Euler Tour Technique, which splits each edge into two directed edges as downward (i.e. advance) and upward (i.e. retreat) edges. It basically transforms the traversal of the given graph into the traversal of the singly-linked list. We set the weights of the advance edges from node $u$ to $v$ as the commitments of the amounts of tokens staked, $w(e_{uv}) = c_{uv}$ and; the weights of the retreat edges simply as zero, $w(e_{vu}) = 0$.
+
+<img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos1.png" width="50%"/> <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos2.png" width="30%"/> 
+
+The _PRFX_ protocol for the _pp-dPoS_ voting mechanism needs the following steps to be performed: (_i_) _staking_: the nodes privately stake tokens to the delegate nodes by generating zero-knowledge proof that they have enough balances to stake and a corresponding edge for that staking is appended to the global directed graph, (_ii_) _linearization_: the global graph is traversed into single-dimensional node array through Euler Tour Technique, (_iii_) _prefix submission_: the nodes pair-wise exchanges prefix summations, (_iv_) _prefix verification_: the nodes verify prefix summations with zero-knowledge proofs on-chain and finally (_v_) _stake computation_: the nodes privately learn the total amount of tokens staked in their pools. In _stake computation_, the nodes may end up with multiple prefix values $\mathcal{P}: (p_0, p_1, ..., p_i)$. To compute the total amount of tokens staked at their pools, they must use the following formula:
+
+$$
+\begin{align}
+& \mathcal{S}(v) = max(\mathcal{P}) - min(\mathcal{P}) 
+\end{align}
+$$
+
+\noindent
+where $min(\mathcal{P})$ and $max(\mathcal{P})$ represent the minimum and maximum prefix values of the node $v$. For $V$ number of nodes in the system, the time complexity needs $O(V)$ for staking at most, $O(V+E)$ for the depth-first search-based graph traversal, $O(VlogV)$ for prefix summation and verification and $O(V)$ for stake computation, which eventually results in $O(VlogV)$ global complexity at the worst case scenario.
+
+<img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos3.png" width="50%"/> <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/dpos4.png" width="40%"/> 
 
 # Web User Interface
 
 Deploy Contract...   Register...  
-
-https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/deploy.png
 
 <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/deploy.png" width="39%"/> <img src="https://github.com/GoshgarIsmayilov/PRFX/blob/main/Auxiliary/register.png" width="34%"/>
 
