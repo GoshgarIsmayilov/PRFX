@@ -340,3 +340,5 @@ Dapp/node_modules/is-weakref filter=lfs diff=lfs merge=lfs -text
 Dapp/node_modules/statuses filter=lfs diff=lfs merge=lfs -text
 Dapp/node_modules/timed-out filter=lfs diff=lfs merge=lfs -text
 Dapp/node_modules/web3-bzz filter=lfs diff=lfs merge=lfs -text
+zokrates-prefix.js filter=lfs diff=lfs merge=lfs -text
+Dapp/zokrates-prefix.js filter=lfs diff=lfs merge=lfs -text
