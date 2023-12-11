@@ -1,0 +1,82 @@
+{
+  "inputs": [
+    {
+      "name": "prefix1",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "prefixSalt1",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "prefixNextSalt1",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "prefixComm1",
+      "public": true,
+      "type": "field"
+    },
+    {
+      "name": "buffer1",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "bufferSalt1",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "bufferNextSalt1",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "bufferComm1",
+      "public": true,
+      "type": "field"
+    },
+    {
+      "name": "buffer2",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "bufferSalt2",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "bufferComm2",
+      "public": true,
+      "type": "field"
+    },
+    {
+      "name": "pos1",
+      "public": true,
+      "type": "field"
+    },
+    {
+      "name": "pos2",
+      "public": true,
+      "type": "field"
+    },
+    {
+      "name": "nextPrefixComm1",
+      "public": true,
+      "type": "field"
+    },
+    {
+      "name": "nextBufferComm1",
+      "public": true,
+      "type": "field"
+    }
+  ],
+  "output": {
+    "type": "field"
+  }
+}

@@ -1,0 +1,12 @@
+import "hashes/sha256/512bitPacked" as sha256packed;
+
+def main(private field prefix1, private field prefixSalt1, private field prefixNextSalt1, public field prefixComm1, private field buffer1, private field bufferSalt1, private field bufferNextSalt1, public field bufferComm1, private field buffer2, private field bufferSalt2, public field bufferComm2, public field pos1, public field pos2, public field nextPrefixComm1, public field nextBufferComm1) -> field {  
+	field[2] prefixComm1_ = sha256packed([0, 0, prefix1, prefixSalt1]);
+	field[2] bufferComm1_ = sha256packed([0, 0, buffer1, bufferSalt1]);
+	field[2] bufferComm2_ = sha256packed([0, 0, buffer2, bufferSalt2]);
+	field[2] nextBufferComm1_ = sha256packed([0, 0, buffer1 + buffer2, bufferNextSalt1]);
+	field[2] nextPrefixComm1_ = if (pos1 > pos2) { sha256packed([0, 0, prefix1 + buffer2, prefixNextSalt1]) } else { sha256packed([0, 0, prefix1, prefixNextSalt1]) };
+
+	field is_correct = if (prefixComm1_[1] == prefixComm1 && bufferComm1_[1] == bufferComm1 && bufferComm2_[1] == bufferComm2 && nextBufferComm1_[1] == nextBufferComm1 && nextPrefixComm1_[1] == nextPrefixComm1) { 1 } else { 0 };
+	return is_correct;
+}
