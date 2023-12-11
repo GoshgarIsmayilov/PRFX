@@ -1,1 +1,11 @@
 *.key filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/** filter=lfs diff=lfs merge=lfs -text
+/Users/goshgar/Desktop/PRFX-GitHub/Dapp/dist/** filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/8f5cd1555ed8af7e4061.module.wasm filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/abf903383514acf4a305.module.wasm filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/bundle.js filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/ef5921a91e40de1c907f.module.wasm filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/node_modules_zokrates-js_pkg_index_js.bundle.js filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/node_modules_zokrates-js_pkg_sync_recursive.bundle.js filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/vendors-node_modules_zokrates-js_pkg_index_js.bundle.js filter=lfs diff=lfs merge=lfs -text
+Dapp/dist/1ab8d04041c01023deaf.module.wasm filter=lfs diff=lfs merge=lfs -text
